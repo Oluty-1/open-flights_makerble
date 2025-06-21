@@ -1,36 +1,12 @@
 version: '3.8'
 services:
-
-
-  app:
-    build: .
-    container_name: openflights_app
-    ports:
-      - "3000:3000"
-    environment:
-      - RAILS_ENV=production
-      - DATABASE_URL=postgresql://user:password@openflights_db:5432/openflights
-      - ROOT_URL=http://localhost:3000
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - SENDGRID_USERNAME=${SENDGRID_USERNAME}
-      - SENDGRID_PASSWORD=${SENDGRID_PASSWORD}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - app-network
-
-
   db:
     image: postgres:14-alpine
     container_name: openflights_db
-    ports:
-      - "5432:5432"
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=openflights
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: openflights
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -41,23 +17,46 @@ services:
     networks:
       - app-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: openflights_redis
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: openflights_app
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      REDIS_URL: redis://openflights_redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - app-network
 
   sidekiq:
     build: .
     container_name: openflights_sidekiq
-    command: bundle exec sidekiq
     environment:
-      - RAILS_ENV=production
-      - DATABASE_URL=postgresql://user:password@openflights_db:5432/openflights
+      RAILS_ENV: development
+      REDIS_URL: redis://openflights_redis:6379/0
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - app-network
-
+    command: ["bundle", "exec", "sidekiq"]
 
 volumes:
   pgdata:
+
 networks:
   app-network:
     driver: bridge
