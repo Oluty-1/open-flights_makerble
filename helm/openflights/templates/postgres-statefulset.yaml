@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: openflights-db
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: openflights-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openflights-db
+  template:
+    metadata:
+      labels:
+        app: openflights-db
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.postgres.image }}
+        envFrom:
+        - configMapRef:
+            name: openflights-config
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: {{ .Values.postgres.storage }}

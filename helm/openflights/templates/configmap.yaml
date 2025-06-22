@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openflights-config
+  namespace: {{ .Values.namespace }}
+data:
+  RAILS_ENV: {{ .Values.app.env.RAILS_ENV }}
+  REDIS_URL: {{ .Values.app.env.REDIS_URL }}
+  POSTGRES_HOST: openflights-db
+  POSTGRES_USER: {{ .Values.postgres.env.POSTGRES_USER }}
+  POSTGRES_PASSWORD: {{ .Values.postgres.env.POSTGRES_PASSWORD }}
+  POSTGRES_DB: {{ .Values.postgres.env.POSTGRES_DB }}

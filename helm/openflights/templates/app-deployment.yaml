@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openflights-app
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: openflights-app
+  template:
+    metadata:
+      labels:
+        app: openflights-app
+    spec:
+      containers:
+      - name: app
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: openflights-config
+        ports:
+        - containerPort: {{ .Values.app.port }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.app.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5

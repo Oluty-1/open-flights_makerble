@@ -1,0 +1,31 @@
+image:
+  repository: localhost:5000/openflights
+  tag: latest
+  pullPolicy: IfNotPresent
+
+namespace: openflights
+
+postgres:
+  image: postgres:14-alpine
+  storage: 1Gi
+  env:
+    POSTGRES_USER: user
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: openflights
+
+redis:
+  image: redis:7-alpine
+
+app:
+  replicas: 1
+  port: 3000
+  env:
+    RAILS_ENV: development
+    REDIS_URL: redis://openflights-redis:6379/0
+
+sidekiq:
+  replicas: 1
+
+ingress:
+  enabled: true
+  host: openflights.local
