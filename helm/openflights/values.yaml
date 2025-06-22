@@ -1,7 +1,7 @@
 image:
-  repository: localhost:5000/openflights
+  repository: oluty/openflights
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 namespace: openflights
 
