@@ -7,7 +7,7 @@ on:
 
 env:
   # AWS_REGION: eu-west-1
-  DOCKERHUB_REPOSITORY: iolutytx/openflights
+  DOCKERHUB_REPOSITORY: oluty/openflights
   DOCKER_IMAGE_TAG: ${{ github.run_number }}
 
 jobs:
