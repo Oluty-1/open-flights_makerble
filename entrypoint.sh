@@ -18,7 +18,7 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: openflights_db
+  host: openflights-db
   port: 5432
   username: user
   password: password
