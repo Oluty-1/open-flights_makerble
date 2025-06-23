@@ -46,6 +46,7 @@ if [[ "$*" == *"rails"* ]]; then
   echo "📊 Setting up database..."
   bundle exec rails db:create 2>/dev/null || echo "Database already exists"
   bundle exec rails db:migrate
+  echo "✅ Database migrations complete!"
 fi
 
 echo "🎉 Setup complete! Starting application..."

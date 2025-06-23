@@ -6,7 +6,6 @@ on:
       - main
 
 env:
-  # AWS_REGION: eu-west-1
   DOCKERHUB_REPOSITORY: oluty/openflights
   DOCKER_IMAGE_TAG: ${{ github.run_number }}
 
@@ -20,14 +19,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      # - name: Cache Docker layers
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-buildx-
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
