@@ -5,8 +5,9 @@ echo "🚀 Starting OpenFlights..."
 
 # Wait for PostgreSQL
 echo "⏳ Waiting for database..."
-until pg_isready -h openflights_db -p 5432 -U user > /dev/null 2>&1; do
-  sleep 1
+until PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "SELECT 1;" > /dev/null 2>&1; do
+  echo "  Still waiting for database connection..."
+  sleep 2
 done
 echo "✅ Database ready!"
 
