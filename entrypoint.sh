@@ -42,7 +42,7 @@ yarn remove axios 2>/dev/null || true
 yarn add axios@0.27.2 --exact 2>/dev/null || echo "Axios already compatible"
 
 # Set up database (only for app container, not sidekiq)
-if [ "$1" = "rails" ]; then
+if [[ "$*" == *"rails"* ]]; then
   echo "📊 Setting up database..."
   bundle exec rails db:create 2>/dev/null || echo "Database already exists"
   bundle exec rails db:migrate
